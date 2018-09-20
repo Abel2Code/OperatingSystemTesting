@@ -81,20 +81,6 @@ int main(int argc, char* argv[])
 		}
 		arg1[counter] = NULL;
 
-    // Finding Arg2
-
-    char *arg2[input.length() + 1];
-
-    // Argument Implementation
-    arg = strtok(secondCmd, " ");
-    counter = 0;
-    while(arg){
-      arg2[counter] = arg;
-      counter++;
-      arg = strtok(NULL, " ");
-    }
-    arg2[counter] = NULL;
-
     // Run in seperate process
 
     pid_t pid;
@@ -103,7 +89,24 @@ int main(int argc, char* argv[])
     if(pid < 0){
       printf("Fork Failed");
     } else if(pid == 0) {
-      executePipe(arg1[0], arg1, arg2[0], arg2);
+      if(secondCmd == NULL){
+        executePipe(NULL, NULL, arg1[0], arg1);
+      } else{
+        // Finding Arg2
+
+        char *arg2[input.length() + 1];
+
+        // Argument Implementation
+        arg = strtok(secondCmd, " ");
+        counter = 0;
+        while(arg){
+          arg2[counter] = arg;
+          counter++;
+          arg = strtok(NULL, " ");
+        }
+        arg2[counter] = NULL;
+        executePipe(arg1[0], arg1, arg2[0], arg2);
+      }
     } else {
       wait(NULL);
     }
